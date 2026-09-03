@@ -11,6 +11,8 @@ jobs:
   post:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write  # 允许 workflow commit state.json 并 push
 
     steps:
       - name: Checkout code
@@ -32,3 +34,21 @@ jobs:
           SF_USER_TOKEN: ${{ secrets.SF_USER_TOKEN }}
           POST_STATUS: ${{ secrets.POST_STATUS || 'publish' }}
         run: python auto_post.py
+
+      - name: Commit state.json
+        if: always()
+        run: |
+          if [ ! -f state.json ]; then
+            echo "state.json not found, skip commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          if git diff --cached --quiet; then
+            echo "state.json unchanged, skip commit"
+          else
+            git commit -m "chore: update state.json [skip ci]"
+            git push
+            echo "✅ state.json pushed to main"
+          fi
