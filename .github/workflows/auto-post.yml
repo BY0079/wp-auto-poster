@@ -31,4 +31,5 @@ jobs:
           WP_USER_PWD: ${{ secrets.WP_USER_PWD }}
           SF_USER_TOKEN: ${{ secrets.SF_USER_TOKEN }}
           POST_STATUS: ${{ secrets.POST_STATUS || 'publish' }}
+          TEST_FORCE_PROMO: 'true'
         run: python auto_post.py
