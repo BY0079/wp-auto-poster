@@ -209,6 +209,10 @@ def post_to_wordpress(title: str, content: str, topic: str) -> dict:
             json=payload,
             timeout=30
         )
+        log(f"DEBUG: HTTP Status = {resp.status_code}")
+        log(f"DEBUG: Content-Type = {resp.headers.get('Content-Type', 'N/A')}")
+        log(f"DEBUG: Response body (first 300 chars):")
+        log(f"  {resp.text[:300]}")
         resp.raise_for_status()
         post = resp.json()
         log(f"OK: Post published! ID: {post.get('id')}")
@@ -221,6 +225,7 @@ def post_to_wordpress(title: str, content: str, topic: str) -> dict:
         sys.exit(1)
     except Exception as e:
         log(f"ERROR: WordPress publish failed: {e}")
+        log(f"  Response body (first 300 chars): {resp.text[:300] if 'resp' in locals() else 'N/A'}")
         sys.exit(1)
 
 
