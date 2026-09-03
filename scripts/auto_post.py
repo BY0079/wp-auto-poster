@@ -2,7 +2,7 @@
 """
 WordPress 自动发文脚本
 - 通过硅基流动 DeepSeek API 生成文章
-- 通过 WordPress REST API 发布
+- 通过 WordPress REST API 发布为草稿
 """
 
 import os
@@ -16,16 +16,16 @@ from pathlib import Path
 try:
     import requests
 except ImportError:
-    print("❌ 缺少 requests 库，请先运行: pip install requests")
+    print("ERROR: Missing 'requests' library. Run: pip install requests")
     sys.exit(1)
 
 
 # ============ 配置区 ============
 WP_SITE_URL = os.environ.get("WP_SITE_URL", "").rstrip("/")
 WP_USERNAME = os.environ.get("WP_USERNAME", "")
-SF_USER_TOKEN = os.environ.get("SF_USER_TOKEN", "").replace(" ", "")
-SILICONFLOW_API_KEY = os.environ.get("SILICONFLOW_API_KEY", "")
-POST_STATUS = os.environ.get("POST_STATUS", "draft")  # draft=草稿 publish=直接发布
+WP_USER_PWD = os.environ.get("WP_USER_PWD", "").replace(" ", "")
+SF_USER_TOKEN = os.environ.get("SF_USER_TOKEN", "")
+POST_STATUS = os.environ.get("POST_STATUS", "draft")
 SILICONFLOW_BASE_URL = "https://api.siliconflow.cn/v1"
 SILICONFLOW_MODEL = "deepseek-ai/DeepSeek-V3"
 
@@ -47,24 +47,24 @@ def check_env() -> None:
         missing.append("WP_SITE_URL")
     if not WP_USERNAME:
         missing.append("WP_USERNAME")
+    if not WP_USER_PWD:
+        missing.append("WP_USER_PWD")
     if not SF_USER_TOKEN:
         missing.append("SF_USER_TOKEN")
-    if not SILICONFLOW_API_KEY:
-        missing.append("SILICONFLOW_API_KEY")
     if missing:
-        log(f"❌ 缺少环境变量: {', '.join(missing)}")
+        log(f"ERROR: Missing env vars: {', '.join(missing)}")
         sys.exit(1)
-    log("✅ 环境变量检查通过")
+    log("OK: Environment variables validated")
 
 
 def load_topics() -> list:
     """加载主题列表"""
     if not TOPICS_FILE.exists():
-        log(f"⚠️ 主题文件 {TOPICS_FILE} 不存在，使用默认主题")
-        return ["人工智能与生活", "科技发展趋势", "效率工具推荐"]
+        log(f"WARN: Topics file {TOPICS_FILE} not found, using defaults")
+        return ["AI and Daily Life", "Tech Trends", "Productivity Tools"]
     with open(TOPICS_FILE, "r", encoding="utf-8") as f:
         topics = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-    log(f"✅ 加载 {len(topics)} 个主题")
+    log(f"OK: Loaded {len(topics)} topics")
     return topics
 
 
@@ -90,8 +90,7 @@ def pick_topic(topics: list, state: dict) -> str:
     used = set(state.get("used", []))
     available = [t for t in topics if t not in used]
     if not available:
-        # 全部用过了，重置
-        log("🔄 所有主题已使用，重置使用记录")
+        log("INFO: All topics used, resetting usage record")
         state["used"] = []
         available = topics
     topic = random.choice(available)
@@ -101,36 +100,36 @@ def pick_topic(topics: list, state: dict) -> str:
 
 def generate_article(topic: str) -> dict:
     """调用硅基流动 API 生成文章"""
-    log(f"🤖 正在生成文章: {topic}")
+    log(f"INFO: Generating article: {topic}")
 
-    system_prompt = """你是一名资深的 SEO 内容编辑，擅长撰写结构清晰、读者友好的中文文章。
+    system_prompt = """You are a senior SEO content editor, specializing in writing clear, reader-friendly Chinese articles.
 
-要求：
-1. 标题控制在 15-25 字，包含关键词，吸引点击
-2. 文章 800-1500 字
-3. 使用 H2/H3 分级标题，结构清晰
-4. 段落简短，每段不超过 4 行
-5. 适当使用列表、引用、加粗等格式
-6. 内容实用、有深度，不要堆砌废话
-7. 用 HTML 格式输出（不要用 Markdown）
-8. 不要在开头写"标题："这种标签
+Requirements:
+1. Title should be 15-25 characters, include keywords, attract clicks
+2. Article 800-1500 words
+3. Use H2/H3 headings, clear structure
+4. Short paragraphs, no more than 4 lines each
+5. Use lists, quotes, bold formatting appropriately
+6. Content should be practical and in-depth, no fluff
+7. Output in HTML format (NOT Markdown)
+8. Do NOT write 'Title:' prefix at the beginning
 
-输出格式（严格遵守）：
-第一行是标题（纯文本，不要带 # 符号）
-空一行
-然后是 HTML 格式的文章正文"""
+Output format (strictly follow):
+First line is the title (plain text, no # symbols)
+Empty line
+Then the HTML body of the article"""
 
-    user_prompt = f"""请围绕主题「{topic}」写一篇高质量的 SEO 博客文章。
+    user_prompt = f"""Please write a high-quality SEO blog article on the topic: '{topic}'
 
-要求：
-- 目标读者：对主题感兴趣的一般用户
-- 语气：专业但平易近人
-- 包含：背景介绍、核心要点、实用建议、总结
-- 字数：1000-1500 字
-- 输出 HTML 格式（用 <h2>、<h3>、<p>、<ul>、<li>、<strong> 等标签）"""
+Requirements:
+- Target audience: General users interested in the topic
+- Tone: Professional but approachable
+- Include: Background, key points, practical advice, summary
+- Length: 1000-1500 words
+- Output in HTML format (use <h2>, <h3>, <p>, <ul>, <li>, <strong> tags)"""
 
     headers = {
-        "Authorization": f"Bearer {SILICONFLOW_API_KEY}",
+        "Authorization": f"Bearer {SF_USER_TOKEN}",
         "Content-Type": "application/json"
     }
 
@@ -154,7 +153,7 @@ def generate_article(topic: str) -> dict:
         resp.raise_for_status()
         data = resp.json()
         content = data["choices"][0]["message"]["content"].strip()
-        log(f"✅ AI 生成成功，字符数: {len(content)}")
+        log(f"OK: AI generation succeeded, chars: {len(content)}")
 
         # 解析标题和正文
         lines = content.split("\n", 1)
@@ -176,18 +175,18 @@ def generate_article(topic: str) -> dict:
 
         return {"title": title, "content": body}
     except requests.exceptions.Timeout:
-        log("❌ AI 生成超时（>120秒）")
+        log("ERROR: AI generation timeout (>120s)")
         sys.exit(1)
     except Exception as e:
-        log(f"❌ AI 生成失败: {e}")
+        log(f"ERROR: AI generation failed: {e}")
         if hasattr(e, "response") and e.response is not None:
-            log(f"   响应内容: {e.response.text[:500]}")
+            log(f"  Response: {e.response.text[:500]}")
         sys.exit(1)
 
 
 def post_to_wordpress(title: str, content: str, topic: str) -> dict:
     """通过 WordPress REST API 发布文章"""
-    log(f"📝 准备发布到 WordPress: {title}")
+    log(f"INFO: Posting to WordPress: {title}")
 
     endpoint = f"{WP_SITE_URL}/wp-json/wp/v2/posts"
 
@@ -206,28 +205,28 @@ def post_to_wordpress(title: str, content: str, topic: str) -> dict:
     try:
         resp = requests.post(
             endpoint,
-            auth=(WP_USERNAME, SF_USER_TOKEN),
+            auth=(WP_USERNAME, WP_USER_PWD),
             json=payload,
             timeout=30
         )
         resp.raise_for_status()
         post = resp.json()
-        log(f"✅ 发布成功！文章 ID: {post.get('id')}")
-        log(f"   状态: {post.get('status')}")
-        log(f"   链接: {post.get('link')}")
+        log(f"OK: Post published! ID: {post.get('id')}")
+        log(f"  Status: {post.get('status')}")
+        log(f"  Link: {post.get('link')}")
         return post
     except requests.exceptions.HTTPError as e:
-        log(f"❌ WordPress 发布失败: {e.response.status_code}")
-        log(f"   响应: {e.response.text[:500]}")
+        log(f"ERROR: WordPress publish failed: {e.response.status_code}")
+        log(f"  Response: {e.response.text[:500]}")
         sys.exit(1)
     except Exception as e:
-        log(f"❌ WordPress 发布失败: {e}")
+        log(f"ERROR: WordPress publish failed: {e}")
         sys.exit(1)
 
 
 def main() -> None:
     log("=" * 50)
-    log("🚀 WordPress 自动发文脚本启动")
+    log("START: WordPress Auto Post Script")
 
     # 1. 检查环境
     check_env()
@@ -238,11 +237,11 @@ def main() -> None:
     # 3. 选择主题
     state = load_state()
     topic = pick_topic(topics, state)
-    log(f"🎯 本次主题: {topic}")
+    log(f"INFO: This run topic: {topic}")
 
     # 4. 生成文章
     article = generate_article(topic)
-    log(f"📄 标题: {article['title']}")
+    log(f"INFO: Title: {article['title']}")
 
     # 5. 发布到 WordPress
     post = post_to_wordpress(article["title"], article["content"], topic)
@@ -251,9 +250,9 @@ def main() -> None:
     save_state(state)
 
     log("=" * 50)
-    log("🎉 全部完成！")
-    log(f"   文章 ID: {post.get('id')}")
-    log(f"   状态: {post.get('status')}")
+    log("DONE: All complete!")
+    log(f"  Post ID: {post.get('id')}")
+    log(f"  Status: {post.get('status')}")
 
 
 if __name__ == "__main__":
