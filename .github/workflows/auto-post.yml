@@ -1,0 +1,32 @@
+name: WP Auto Poster
+
+on:
+  schedule:
+    - cron: '0 0,6,12,18 * * *'
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装依赖
+        run: pip install -r scripts/requirements.txt
+
+      - name: 运行自动发文脚本
+        env:
+          WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
+          WP_USERNAME: ${{ secrets.WP_USERNAME }}
+          WP_APP_PASSWORD: *** secrets.WP_APP_PASSWORD }}
+          SILICONFLOW_API_KEY: *** secrets.SILICONFLOW_API_KEY }}
+          POST_STATUS: ${{ secrets.POST_STATUS || 'draft' }}
+        run: python scripts/auto_post.py
