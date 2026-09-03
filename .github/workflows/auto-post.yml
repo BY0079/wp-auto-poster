@@ -1,17 +1,19 @@
 name: WP Auto Poster
 
 on:
+  # 每天 UTC 0:00 = 北京时间 8:00
   schedule:
-    - cron: '0 0,6,12,18 * * *'
+    - cron: '0 0 * * *'
+  # 允许手动触发测试
   workflow_dispatch:
 
 jobs:
   post:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -19,14 +21,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install deps
-        run: pip install -r scripts/requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Run auto post
+      - name: Run auto post script
         env:
           WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
           WP_USERNAME: ${{ secrets.WP_USERNAME }}
           WP_USER_PWD: ${{ secrets.WP_USER_PWD }}
           SF_USER_TOKEN: ${{ secrets.SF_USER_TOKEN }}
-          POST_STATUS: ${{ secrets.POST_STATUS || 'draft' }}
-        run: python scripts/auto_post.py
+          POST_STATUS: ${{ secrets.POST_STATUS || 'publish' }}
+        run: python auto_post.py

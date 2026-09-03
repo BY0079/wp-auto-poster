@@ -1,61 +1,117 @@
-# WordPress 自动发文（GitHub Actions + 硅基流动）
+# WordPress 自动发文系统 v2.0
 
-完全免费、零服务器、零维护的 WordPress 自动发文方案。
+基于 **GitHub Actions + 硅基流动 DeepSeek V3 + WordPress REST API** 的零成本自动发文方案。
 
-## 工作原理
+## ✨ 特性
+
+- 🕗 **每天北京时间 8:00** 准时自动发布
+- 🤖 **DeepSeek V3** AI 写作，1000-1500 字高质量内容
+- 📊 **SEO 优化**：标题含关键词、文前概况、结构化正文、标签、友好 slug
+- 🎯 **降低 AI 味**：避免模板句、多用具体案例、口语化表达
+- 🏷️ **6 个分类**：云服务器与建站 / AI 与效率 / WordPress 建站 / 编程开发 / 新手入门 / 数字生活
+- 🌐 **主题相关推广**：云服务器类文章才推雨云，**自然不硬广**
+- 📝 **自动标签**：AI 提取关键词自动创建 WordPress 标签
+
+## 📂 文件结构
 
 ```
-GitHub Actions（每 6 小时）
-    ↓
-调用硅基流动 DeepSeek V3 生成文章
-    ↓
-通过 WordPress REST API 发布为草稿
-    ↓
-你在 WordPress 后台审核 → 发布
+wp-autoposter/
+├── .github/workflows/auto-post.yml   # GitHub Actions 配置
+├── auto_post.py                      # 主脚本（SEO + 推广 + 分类）
+├── topics.json                       # 30 个主题 + 分类 + 推广标记
+├── scripts/requirements.txt          # Python 依赖
+└── README.md                         # 本文档
 ```
 
-## 费用
+## 🔑 GitHub Secrets 配置
 
-- ✅ GitHub Actions：每月 2,000 分钟免费额度
-- ✅ 硅基流动：注册即送免费额度
-- ✅ WordPress REST API：内置免费
+| Secret | 说明 |
+|--------|------|
+| `WP_SITE_URL` | WordPress 站点 URL，如 `https://example.com` |
+| `WP_USERNAME` | WordPress 管理员账号 |
+| `WP_USER_PWD` | WordPress Application Password（**去空格**） |
+| `SF_USER_TOKEN` | 硅基流动 API Key |
+| `POST_STATUS` | `publish`（自动发布）/ `draft`（草稿） |
 
-## 部署步骤
+## 🚀 使用方法
 
-1. 创建 GitHub 私有仓库，上传所有文件
-2. 仓库 Settings → Secrets and variables → Actions 添加：
-   - `WP_SITE_URL`：你的 WordPress 地址，如 `https://wordpress-41319.wasmer.app`
-   - `WP_USERNAME`：WordPress 管理员用户名
-   - `WP_APP_PASSWORD`：WordPress 应用密码（用户 → 个人资料 → 应用密码生成）
-   - `SILICONFLOW_API_KEY`：硅基流动 API Key
-   - `POST_STATUS`（可选）：`draft`（默认）/`publish`/`pending`
-3. 启用 Workflows
-4. 可手动测试一次：Actions → WP Auto Poster → Run workflow
+### 1. WordPress 后台
 
-## 调整发文频率
+- 创建 6 个分类（名字必须和 `topics.json` 里的 `category` 字段一致）
+- 用户 → Profile → Application Passwords → 生成一个新密码
 
-编辑 `.github/workflows/auto-post.yml`：
+### 2. GitHub
+
+- 推送代码到仓库
+- Settings → Secrets → 配置上述 5 个 Secret
+- Actions → Run workflow 测试
+
+### 3. 触发频率
+
+GitHub Actions 的 cron 用 UTC 时间，**北京时间 8:00 = UTC 0:00**：
 
 ```yaml
 schedule:
-  - cron: '0 0,6,12,18 * * *'   # 每天 0/6/12/18 点（UTC 时间）
-  # - cron: '0 2 * * *'         # 每天北京时间 10 点
-  # - cron: '0 */6 * * *'       # 每 6 小时一次
+  - cron: '0 0 * * *'    # 每天 UTC 0:00（北京时间 8:00）
 ```
 
-> ⚠️ GitHub Actions 使用 UTC 时区，CRON 时间 +8 = 北京时间
+## 📝 topics.json 结构
 
-## 修改主题
-
-编辑 `scripts/topics.txt`，每行一个主题。
-
-## 切换 AI 模型
-
-修改 `scripts/auto_post.py` 第 32 行：
-
-```python
-SILICONFLOW_MODEL = "deepseek-ai/DeepSeek-V3"
-# 备选模型：
-# "Qwen/Qwen2.5-72B-Instruct"
-# "Pro/THUDM/glm-4-9b-chat"
+每个主题包含：
+```json
+{
+  "title": "文章标题",
+  "category": "分类名（必须与 WordPress 后台一致）",
+  "promo": true,           // true=推雨云，false=不推
+  "keywords": ["关键词1", "关键词2"],
+  "reason": "为什么这个主题要/不要推广"
+}
 ```
+
+当前推广分布：
+- ☁️ 云服务器与建站（5 个）→ **全部推**
+- 🤖 AI 与效率（5 个）→ 不推
+- 📝 WordPress 建站（5 个）→ 不推
+- 💻 编程开发（5 个）→ 不推
+- 🌱 新手入门（5 个）→ 不推
+- 🌐 数字生活（5 个）→ 不推
+
+推广频率：30 篇里 5 篇 = **约每 6 篇一次**（更自然）
+
+## 🎨 SEO 优化要点
+
+### 标题
+- 15-28 字，含主关键词
+- 数字/悬念/对比/痛点
+
+### 全文概况（100-200 字）
+- 放在文前，**样式化的蓝色框**
+- 3 秒让读者判断文章价值
+
+### 正文
+- H2/H3 结构化
+- 短段落（≤4 行/段）
+- 列表、引用、粗体
+- 至少 1 个具体案例
+
+### AI 味淡化
+- ❌ 禁止：「作为...」「综上所述」「首先...其次...最后」
+- ✅ 多用「我」「你」，具体数字，口语化，反问句
+
+## 🔧 本地调试
+
+```bash
+pip install -r scripts/requirements.txt
+
+export WP_SITE_URL="https://your-site.com"
+export WP_USERNAME="admin"
+export WP_USER_PWD="your app password"
+export SF_USER_TOKEN="sk-xxx"
+export POST_STATUS="publish"
+
+python auto_post.py
+```
+
+## 📜 License
+
+MIT

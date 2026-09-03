@@ -1,0 +1,221 @@
+{
+  "version": "2.0",
+  "description": "WordPress 自动发文主题列表 - 围绕云服务器/AI/WP/编程/新手/数字生活",
+  "topics": [
+    {
+      "title": "雨云服务器 aabh 优惠码真实使用体验：性价比到底怎么样",
+      "category": "云服务器与建站",
+      "promo": true,
+      "keywords": ["雨云", "aabh", "优惠码", "云服务器", "VPS"],
+      "reason": "直接评测雨云，自然推荐优惠码"
+    },
+    {
+      "title": "国内高性价比VPS推荐：2026年新手建站服务器选购指南",
+      "category": "云服务器与建站",
+      "promo": true,
+      "keywords": ["VPS", "云服务器", "建站", "服务器选购", "雨云"],
+      "reason": "VPS 推荐主题，云服务器推广合适"
+    },
+    {
+      "title": "域名注册从入门到精通：新手必知的 5 个避坑点",
+      "category": "云服务器与建站",
+      "promo": true,
+      "keywords": ["域名", "DNS", "建站", "域名注册", "新手"],
+      "reason": "建站教程，自然过渡到服务器"
+    },
+    {
+      "title": "SSL 证书申请与配置详解：从零开始给网站加 HTTPS",
+      "category": "云服务器与建站",
+      "promo": true,
+      "keywords": ["SSL", "HTTPS", "证书", "建站", "Nginx"],
+      "reason": "建站技术，涉及服务器配置"
+    },
+    {
+      "title": "新手建站第一步：服务器选购的 7 个核心指标",
+      "category": "云服务器与建站",
+      "promo": true,
+      "keywords": ["建站", "服务器", "VPS", "新手", "云主机"],
+      "reason": "面向新手的服务器选购，推广转化率高"
+    },
+
+    {
+      "title": "DeepSeek V3 真实使用 30 天：一个程序员的深度评测",
+      "category": "AI 与效率",
+      "promo": false,
+      "keywords": ["DeepSeek", "AI", "硅基流动", "API", "程序员"],
+      "reason": "AI 评测，与云服务器推广无关"
+    },
+    {
+      "title": "硅基流动 API 调用完全指南：从注册到第一个 AI 应用",
+      "category": "AI 与效率",
+      "promo": false,
+      "keywords": ["硅基流动", "DeepSeek", "API", "AI开发", "免费AI"],
+      "reason": "AI API 教程，不涉及服务器推广"
+    },
+    {
+      "title": "用 AI 提升 100 倍工作效率：5 个真实使用场景",
+      "category": "AI 与效率",
+      "promo": false,
+      "keywords": ["AI", "效率", "ChatGPT", "DeepSeek", "工具"],
+      "reason": "效率提升方法，不推广服务器"
+    },
+    {
+      "title": "AI 提示词工程入门：让 AI 听懂你说话的 5 个技巧",
+      "category": "AI 与效率",
+      "promo": false,
+      "keywords": ["提示词", "Prompt", "AI", "ChatGPT", "DeepSeek"],
+      "reason": "AI 写作技巧，不推广服务器"
+    },
+    {
+      "title": "2026 年免费 AI 工具推荐清单：让小白也能玩转 AI",
+      "category": "AI 与效率",
+      "promo": false,
+      "keywords": ["AI工具", "免费AI", "ChatGPT", "DeepSeek", "效率工具"],
+      "reason": "工具推荐，不涉及推广"
+    },
+
+    {
+      "title": "WordPress 安装完整教程：5 分钟拥有自己的博客",
+      "category": "WordPress 建站",
+      "promo": false,
+      "keywords": ["WordPress", "建站", "博客", "新手", "安装教程"],
+      "reason": "WP 安装教程，本身就是博客话题"
+    },
+    {
+      "title": "WordPress SEO 优化实战：让文章被搜索引擎快速收录",
+      "category": "WordPress 建站",
+      "promo": false,
+      "keywords": ["WordPress", "SEO", "收录", "搜索引擎", "优化"],
+      "reason": "SEO 优化，与服务器推广弱关联"
+    },
+    {
+      "title": "WordPress 自动发文方案：让 AI 帮你每天写博客",
+      "category": "WordPress 建站",
+      "promo": false,
+      "keywords": ["WordPress", "AI", "自动发文", "博客", "GitHub Actions"],
+      "reason": "WP 自动化教程，技术向"
+    },
+    {
+      "title": "WordPress 主题推荐：2026 年最值得用的 5 款主题",
+      "category": "WordPress 建站",
+      "promo": false,
+      "keywords": ["WordPress", "主题", "推荐", "博客主题", "建站"],
+      "reason": "主题推荐，不推广服务器"
+    },
+    {
+      "title": "WordPress 必备插件清单：每个新手站长都该装的 10 个插件",
+      "category": "WordPress 建站",
+      "promo": false,
+      "keywords": ["WordPress", "插件", "新手", "建站", "推荐"],
+      "reason": "插件推荐，不推广服务器"
+    },
+
+    {
+      "title": "Python 入门教程：5 个脚本让你立刻上手",
+      "category": "编程开发",
+      "promo": false,
+      "keywords": ["Python", "编程", "脚本", "入门", "自动化"],
+      "reason": "编程入门，不推广服务器"
+    },
+    {
+      "title": "Git 和 GitHub 完全入门：从零学会版本控制",
+      "category": "编程开发",
+      "promo": false,
+      "keywords": ["Git", "GitHub", "版本控制", "入门", "编程"],
+      "reason": "版本控制教程，不推广服务器"
+    },
+    {
+      "title": "零基础学 API 调用：让程序自动干活的魔法",
+      "category": "编程开发",
+      "promo": false,
+      "keywords": ["API", "编程", "自动化", "入门", "Python"],
+      "reason": "API 教程，不推广服务器"
+    },
+    {
+      "title": "用 GitHub Actions 做自动化：每天自动跑脚本的实战",
+      "category": "编程开发",
+      "promo": false,
+      "keywords": ["GitHub Actions", "自动化", "CI/CD", "脚本", "定时任务"],
+      "reason": "自动化教程，技术向"
+    },
+    {
+      "title": "正则表达式入门：5 分钟学会文本处理的瑞士军刀",
+      "category": "编程开发",
+      "promo": false,
+      "keywords": ["正则表达式", "编程", "文本处理", "Python", "入门"],
+      "reason": "编程技巧，不推广服务器"
+    },
+
+    {
+      "title": "零基础如何开始自己的第一个博客：从想法到上线全过程",
+      "category": "新手入门",
+      "promo": false,
+      "keywords": ["新手", "博客", "建站", "入门", "WordPress"],
+      "reason": "新人教程，不强行推广"
+    },
+    {
+      "title": "建站赚钱的真实路径：从零开始到月入过万",
+      "category": "新手入门",
+      "promo": false,
+      "keywords": ["建站", "赚钱", "副业", "博客变现", "新手"],
+      "reason": "副业话题，避免硬广感"
+    },
+    {
+      "title": "Windows 新人必装的 10 个软件：让电脑效率翻倍",
+      "category": "新手入门",
+      "promo": false,
+      "keywords": ["Windows", "软件推荐", "效率工具", "新手", "装机必备"],
+      "reason": "软件推荐，不推广服务器"
+    },
+    {
+      "title": "互联网基础知识科普：域名、IP、DNS 到底是什么",
+      "category": "新手入门",
+      "promo": false,
+      "keywords": ["互联网", "域名", "IP", "DNS", "科普"],
+      "reason": "科普文章，不推广服务器"
+    },
+    {
+      "title": "如何用 GitHub 托管你的代码：程序员的简历神器",
+      "category": "新手入门",
+      "promo": false,
+      "keywords": ["GitHub", "代码托管", "程序员", "新手", "简历"],
+      "reason": "程序员入门，不推广服务器"
+    },
+
+    {
+      "title": "远程办公效率工具推荐：在家也能高效产出",
+      "category": "数字生活",
+      "promo": false,
+      "keywords": ["远程办公", "效率工具", "在家办公", "工具推荐", "数字游民"],
+      "reason": "效率工具，不推广服务器"
+    },
+    {
+      "title": "副业变现的 5 种思路：普通人也能搞钱的副业清单",
+      "category": "数字生活",
+      "promo": false,
+      "keywords": ["副业", "赚钱", "变现", "互联网副业", "数字游民"],
+      "reason": "副业话题，避免硬广"
+    },
+    {
+      "title": "时间管理的实用技巧：让每天多出 2 小时的秘密",
+      "category": "数字生活",
+      "promo": false,
+      "keywords": ["时间管理", "效率", "GTD", "番茄钟", "自我提升"],
+      "reason": "时间管理，不推广服务器"
+    },
+    {
+      "title": "个人知识管理入门：从收藏到真正用上",
+      "category": "数字生活",
+      "promo": false,
+      "keywords": ["知识管理", "Notion", "Obsidian", "笔记", "效率"],
+      "reason": "知识管理，不推广服务器"
+    },
+    {
+      "title": "电纸书阅读器选购指南：Kindle、掌阅、文石怎么选",
+      "category": "数字生活",
+      "promo": false,
+      "keywords": ["电纸书", "Kindle", "掌阅", "文石", "阅读器"],
+      "reason": "硬件选购，不推广服务器"
+    }
+  ]
+}
