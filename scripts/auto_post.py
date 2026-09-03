@@ -23,7 +23,7 @@ except ImportError:
 # ============ 配置区 ============
 WP_SITE_URL = os.environ.get("WP_SITE_URL", "").rstrip("/")
 WP_USERNAME = os.environ.get("WP_USERNAME", "")
-WP_APP_PASSWORD = os.environ.get("WP_APP_PASSWORD", "").replace(" ", "")
+SF_USER_TOKEN = os.environ.get("SF_USER_TOKEN", "").replace(" ", "")
 SILICONFLOW_API_KEY = os.environ.get("SILICONFLOW_API_KEY", "")
 POST_STATUS = os.environ.get("POST_STATUS", "draft")  # draft=草稿 publish=直接发布
 SILICONFLOW_BASE_URL = "https://api.siliconflow.cn/v1"
@@ -47,8 +47,8 @@ def check_env() -> None:
         missing.append("WP_SITE_URL")
     if not WP_USERNAME:
         missing.append("WP_USERNAME")
-    if not WP_APP_PASSWORD:
-        missing.append("WP_APP_PASSWORD")
+    if not SF_USER_TOKEN:
+        missing.append("SF_USER_TOKEN")
     if not SILICONFLOW_API_KEY:
         missing.append("SILICONFLOW_API_KEY")
     if missing:
@@ -206,7 +206,7 @@ def post_to_wordpress(title: str, content: str, topic: str) -> dict:
     try:
         resp = requests.post(
             endpoint,
-            auth=(WP_USERNAME, WP_APP_PASSWORD),
+            auth=(WP_USERNAME, SF_USER_TOKEN),
             json=payload,
             timeout=30
         )
