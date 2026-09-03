@@ -26,7 +26,7 @@ jobs:
         env:
           WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
           WP_USERNAME: ${{ secrets.WP_USERNAME }}
-          WP_APP_PASSWORD: *** secrets.WP_APP_PASSWORD }}
-          SILICONFLOW_API_KEY: *** secrets.SILICONFLOW_API_KEY }}
+          WP_USER_PWD: ${{ secrets.WP_USER_PWD }}
+          SF_USER_TOKEN: *** secrets.SF_USER_TOKEN }}
           POST_STATUS: ${{ secrets.POST_STATUS || 'draft' }}
         run: python scripts/auto_post.py
