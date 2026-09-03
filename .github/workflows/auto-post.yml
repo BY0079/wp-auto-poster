@@ -11,18 +11,18 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: 检出代码
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 设置 Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 安装依赖
+      - name: Install deps
         run: pip install -r scripts/requirements.txt
 
-      - name: 运行自动发文脚本
+      - name: Run auto post
         env:
           WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
           WP_USERNAME: ${{ secrets.WP_USERNAME }}
