@@ -211,21 +211,31 @@ def post_to_wordpress(title: str, content: str, topic: str) -> dict:
         )
         log(f"DEBUG: HTTP Status = {resp.status_code}")
         log(f"DEBUG: Content-Type = {resp.headers.get('Content-Type', 'N/A')}")
-        log(f"DEBUG: Response body (first 300 chars):")
-        log(f"  {resp.text[:300]}")
-        resp.raise_for_status()
-        post = resp.json()
-        log(f"OK: Post published! ID: {post.get('id')}")
-        log(f"  Status: {post.get('status')}")
-        log(f"  Link: {post.get('link')}")
-        return post
+        log(f"DEBUG: Response body (first 500 chars):")
+        log(f"  {resp.text[:500]}")
+
+        # wasmer.io 的 WordPress 会在 JSON 前面插入 PHP Warning HTML
+        # 容错提取：找到第一个 { 开始和最后一个 } 结束
+        text = resp.text.strip()
+        json_start = text.find("{")
+        json_end = text.rfind("}") + 1
+        if json_start >= 0 and json_end > json_start:
+            clean_json = text[json_start:json_end]
+            post = json.loads(clean_json)
+            log(f"OK: Post published! ID: {post.get('id')}")
+            log(f"  Status: {post.get('status')}")
+            log(f"  Link: {post.get('link')}")
+            return post
+        else:
+            log("ERROR: Could not find JSON in response")
+            sys.exit(1)
     except requests.exceptions.HTTPError as e:
         log(f"ERROR: WordPress publish failed: {e.response.status_code}")
         log(f"  Response: {e.response.text[:500]}")
         sys.exit(1)
     except Exception as e:
         log(f"ERROR: WordPress publish failed: {e}")
-        log(f"  Response body (first 300 chars): {resp.text[:300] if 'resp' in locals() else 'N/A'}")
+        log(f"  Response body (first 500 chars): {resp.text[:500] if 'resp' in locals() else 'N/A'}")
         sys.exit(1)
 
 
